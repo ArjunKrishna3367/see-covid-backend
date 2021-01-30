@@ -1,5 +1,5 @@
 pycountry==19.8.18
 Flask_Cors==3.0.8
-pymongo==3.10.1
+pymongo[tls,srv]==3.10.1
 Flask==1.1.1
 dnspython==1.16.0
