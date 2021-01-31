@@ -26,7 +26,7 @@ def page_not_found(e):
 def percent_1day():
     return dumps(dataDB.find_one())
 
-@app.route('/nearby_data', methods=['GET'])
+@app.route('/get_info', methods=['GET'])
 def nearby_data():
     data = []
     query_parameters = request.args
