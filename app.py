@@ -33,23 +33,39 @@ def nearby_zipCodes():
 
 @app.route('/get_info', methods=['GET'])
 def nearby_data():
-    data = []
+    nearby_data = {}
+    all_data = {}
+    nearbyCodes = []
+    zipCode = 10001
     query_parameters = request.args
 
-    # lat = query_parameters.get('lat')
-    # lon = query_parameters.get('lat')
+    lat = query_parameters.get('lat')
+    lon = query_parameters.get('lon')
     zipCode = query_parameters.get('zipCode')
 
-    # if (lat != None and lon != None):
-    #     nearby_data = nearby_zipCodes
-    if (zipCode != None and int(zipCode) > 10000):
-        filter = {"zipCode": int(zipCode)}
+    print(lat != None, lon != None)
+
+    if (lat != None and lon != None):
+        nearby = get_zip(float(lat), float(lon))
+        nearbyCodes = nearby["nearbyZipCodes"]
+        print(nearbyCodes)
+        filter = {"zipCode": {"$in": [int(zipCode) for zipCode in nearbyCodes]}}
+        for zipCodeData in dataDB.find(filter):
+            nearby_data[zipCodeData["zipCode"]] = zipCodeData
+        all_data["nearbyZipCodes"] = nearby_data
+        zipCode = int(nearby["zipCode"])
+
+    elif (zipCode != None and int(zipCode) > 10000):
+        zipCode = int(zipCode)
     else:
-        return '''<h1>No zipcode provided</h1>'''
-    
+        print("hello")
+        return {}
+
+    filter = {"zipCode": zipCode}
     for zipCodeData in dataDB.find(filter):
-        data.append(zipCodeData)
-    return dumps(data)
+        all_data["zipCode"] = zipCodeData
+    
+    return dumps(all_data)
     
 if __name__ == "__main__":
     app.run()
