@@ -29,7 +29,7 @@ def nearby_zipCodes():
     query_parameters = request.args
     lat = float(query_parameters.get('lat'))
     lon = float(query_parameters.get('lon'))
-    return get_zip(40.712776, -74.005974)
+    return get_zip(lat, lon)
 
 @app.route('/get_info', methods=['GET'])
 def nearby_data():
