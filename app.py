@@ -5,6 +5,7 @@ from bson.json_util import dumps
 from flask_cors import CORS
 from datetime import datetime, timedelta
 import pycountry
+from nearbyZipCodes import get_zip
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -22,20 +23,29 @@ def home():
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
 
-@app.route('/percent_1day', methods=['GET'])
-def percent_1day():
-    return dumps(dataDB.find_one())
+@app.route('/nearby_zipCodes', methods=['GET'])
+def nearby_zipCodes():
+    data = []
+    query_parameters = request.args
+    lat = float(query_parameters.get('lat'))
+    lon = float(query_parameters.get('lon'))
+    return get_zip(40.712776, -74.005974)
 
 @app.route('/get_info', methods=['GET'])
 def nearby_data():
     data = []
     query_parameters = request.args
-    myZipCode = query_parameters.get('zipCode')
 
-    # nearby = nearbyZipCodes(myZipCode)
-    nearby = [10001, 10002, 10003]
+    # lat = query_parameters.get('lat')
+    # lon = query_parameters.get('lat')
+    zipCode = query_parameters.get('zipCode')
 
-    filter = {"zipCode": {"$in" : [zipCode for zipCode in nearby]}}
+    # if (lat != None and lon != None):
+    #     nearby_data = nearby_zipCodes
+    if (zipCode != None and int(zipCode) > 10000):
+        filter = {"zipCode": int(zipCode)}
+    else:
+        return '''<h1>No zipcode provided</h1>'''
     
     for zipCodeData in dataDB.find(filter):
         data.append(zipCodeData)
