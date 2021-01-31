@@ -23,8 +23,23 @@ def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
 
 @app.route('/percent_1day', methods=['GET'])
-def source_data():
+def percent_1day():
     return dumps(dataDB.find_one())
+
+@app.route('/nearby_data', methods=['GET'])
+def nearby_data():
+    data = []
+    query_parameters = request.args
+    myZipCode = query_parameters.get('zipCode')
+
+    # nearby = nearbyZipCodes(myZipCode)
+    nearby = [10001, 10002, 10003]
+
+    filter = {"zipCode": {"$in" : [zipCode for zipCode in nearby]}}
+    
+    for zipCodeData in dataDB.find(filter):
+        data.append(zipCodeData)
+    return dumps(data)
     
 if __name__ == "__main__":
     app.run()
