@@ -13,6 +13,7 @@ app.config["DEBUG"] = True
 client = pymongo.MongoClient("mongodb+srv://akrishna:J3WfhZuNfkcNx9uC@coviddata.drkjr.mongodb.net/coviddata?retryWrites=true&w=majority")
 db = client.test
 dataDB = db.testData
+cityData = db.cityData
 
 @app.route('/', methods=['GET'])
 def home():
@@ -66,6 +67,10 @@ def nearby_data():
         all_data["zipCode"] = zipCodeData
     
     return dumps(all_data)
+
+@app.route('/city_data', methods=['GET'])
+def city_data():
+    return dumps(cityData.find_one())
     
 if __name__ == "__main__":
     app.run()
