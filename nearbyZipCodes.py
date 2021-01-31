@@ -3,6 +3,7 @@ import json
 search = SearchEngine(simple_zipcode=False)
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
+import numpy as np
 
 def get_zip(lat,long):
     zips=search.by_coordinates(lat, long,radius=20,returns=40)
